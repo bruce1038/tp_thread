@@ -82,15 +82,3 @@ void finDeposerTexture() {
     pthread_cond_signal(&fConsom);
   pthread_mutex_unlock(&m);
 }
-
-    pthread_cond_wait(&fDepot,&m);
-  }
-  vides ++;
-  pthread_mutex_unlock(&m);
-}
-
-void finDeposerTexture() {
-  pthread_mutex_lock(&m);
-    pthread_cond_signal(&fConsom);
-  pthread_mutex_unlock(&m);
-}

@@ -38,7 +38,7 @@ void attendreTailleFenetre() {
 }
 
 void signalerFenetreEtTexturePrete() {
-  pthread_cond_signal(&threadAffichage);
+  pthread_cond_signal(&threadAffichage); //poisdfhsfin
   pthread_cond_signal(&threadVideo);
 
 }

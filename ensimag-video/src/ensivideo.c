@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
     assert(res == 0);
 
     // start the two stream
-    pthread_t threadVideo, threadAudio, threadAffichage;
     pthread_create(&threadVideo, NULL, theoraStreamReader, (void *) argv[1]);
     pthread_create(&threadAudio, NULL, vorbisStreamReader, (void *) argv[1]);
 

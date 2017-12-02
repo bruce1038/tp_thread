@@ -9,7 +9,7 @@
 #include <pthread.h>
 #include "uthash.h"
 
-//extern pthread_t threadAffichage;
+pthread_t threadVideo, threadAudio, threadAffichage;
 
 enum streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
 

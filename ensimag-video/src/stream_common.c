@@ -1,6 +1,5 @@
 #include <time.h>
 #include <assert.h>
-#include <pthread.h>
 #include "ensivorbis.h"
 #include "ensitheora.h"
 #include "stream_common.h"
@@ -50,10 +49,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
     int serial = ogg_page_serialno( ppage );
     int bos = ogg_page_bos( ppage );
 
-    pthread_mutex_t mutexHash;
-    pthread_mutex_init(&mutexHash, NULL);
-
-    struct streamstate *s = NULL;
+    struct streamstate *s= NULL;
     if (bos) { // début de stream
 	s = malloc(sizeof(struct streamstate));
 	s->serial = serial;
@@ -69,25 +65,19 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
 	assert(res == 0);
 
 	// proteger l'accès à la hashmap
-  pthread_mutex_lock(&mutexHash);
 
 	if (type == TYPE_THEORA)
-	    HASH_ADD_INT(theorastrstate, serial, s);
+	    HASH_ADD_INT( theorastrstate, serial, s );
 	else
-	    HASH_ADD_INT(vorbisstrstate, serial, s);
-
-  pthread_mutex_unlock(&mutexHash);
+	    HASH_ADD_INT( vorbisstrstate, serial, s );
 
     } else {
 	// proteger l'accès à la hashmap
-  pthread_mutex_lock(&mutexHash);
 
 	if (type == TYPE_THEORA)
-	    HASH_FIND_INT(theorastrstate, &serial, s);
+	    HASH_FIND_INT( theorastrstate, & serial, s );
 	else
-	    HASH_FIND_INT(vorbisstrstate, &serial, s);
-
-  pthread_mutex_unlock(&mutexHash);
+	    HASH_FIND_INT( vorbisstrstate, & serial, s );
 
 	assert(s != NULL);
     }
@@ -150,7 +140,7 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
 
 	    if (type == TYPE_THEORA) {
 		// lancement du thread gérant l'affichage (draw2SDL)
-	  pthread_create(&threadAffichage, NULL, draw2SDL, (void *) s->serial);
+	  pthread_create(&threadAffichage, NULL, draw2SDL, (void *)s->serial);
 		assert(res == 0);
 	    }
 	}

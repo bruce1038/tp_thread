@@ -6,7 +6,10 @@
 #include <theora/theora.h>
 #include <theora/theoradec.h>
 #include <vorbis/codec.h>
+#include <pthread.h>
 #include "uthash.h"
+
+extern pthread_t threadAffichage;
 
 enum streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
 

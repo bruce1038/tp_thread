@@ -2,15 +2,13 @@
 #include <unistd.h>
 #include <assert.h>
 #include <SDL2/SDL.h>
-#include <pthread.h>
+
 #include "stream_common.h"
 #include "oggstream.h"
 
 
 int main(int argc, char *argv[]) {
     int res;
-
-    pthread_t threadAudio, threadVideo, threadAffichage;
 
     if (argc != 2) {
 	fprintf(stderr, "Usage: %s FILE", argv[0]);
@@ -24,7 +22,8 @@ int main(int argc, char *argv[]) {
     atexit(SDL_Quit);
     assert(res == 0);
 
-    // start the two stream readers
+    // start the two stream
+    pthread_t threadVideo, threadAudio;
     pthread_create(&threadVideo, NULL, theoraStreamReader, (void *) argv[1]);
     pthread_create(&threadAudio, NULL, vorbisStreamReader, (void *) argv[1]);
 

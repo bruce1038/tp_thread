@@ -2,13 +2,15 @@
 #include <unistd.h>
 #include <assert.h>
 #include <SDL2/SDL.h>
-
+#include <pthread.h>
 #include "stream_common.h"
 #include "oggstream.h"
 
 
 int main(int argc, char *argv[]) {
     int res;
+
+    pthread_t threadAudio, threadVideo, threadAffichage;
 
     if (argc != 2) {
 	fprintf(stderr, "Usage: %s FILE", argv[0]);

@@ -1,5 +1,6 @@
 #include <time.h>
 #include <assert.h>
+#include <pthread.h>
 #include "ensivorbis.h"
 #include "ensitheora.h"
 #include "stream_common.h"
@@ -49,7 +50,10 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
     int serial = ogg_page_serialno( ppage );
     int bos = ogg_page_bos( ppage );
 
-    struct streamstate *s= NULL;
+    pthread_mutex_t mutexHash;
+    pthread_mutex_init(&mutexHash, NULL);
+
+    struct streamstate *s = NULL;
     if (bos) { // début de stream
 	s = malloc(sizeof(struct streamstate));
 	s->serial = serial;
@@ -65,19 +69,25 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
 	assert(res == 0);
 
 	// proteger l'accès à la hashmap
+  pthread_mutex_lock(&mutexHash);
 
 	if (type == TYPE_THEORA)
-	    HASH_ADD_INT( theorastrstate, serial, s );
+	    HASH_ADD_INT(theorastrstate, serial, s);
 	else
-	    HASH_ADD_INT( vorbisstrstate, serial, s );
+	    HASH_ADD_INT(vorbisstrstate, serial, s);
+
+  pthread_mutex_unlock(&mutexHash);
 
     } else {
 	// proteger l'accès à la hashmap
+  pthread_mutex_lock(&mutexHash);
 
 	if (type == TYPE_THEORA)
-	    HASH_FIND_INT( theorastrstate, & serial, s );
+	    HASH_FIND_INT(theorastrstate, &serial, s);
 	else
-	    HASH_FIND_INT( vorbisstrstate, & serial, s );
+	    HASH_FIND_INT(vorbisstrstate, &serial, s);
+
+  pthread_mutex_unlock(&mutexHash);
 
 	assert(s != NULL);
     }

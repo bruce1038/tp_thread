@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <SDL2/SDL.h>
-
+#include <pthread.h>
 #include "stream_common.h"
 #include "oggstream.h"
 

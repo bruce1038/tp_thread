@@ -1,30 +1,28 @@
 #include "synchro.h"
 #include "ensitheora.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
 
 int vides = 30 ;
 bool fini;
-cond fp ; //con d'attente pour les producteurs
-cond fc ; //con d'attente pour les consommateurs
 
 /* les variables pour la synchro, ici */
 
-pthread_mutex_t m;
-pthread_mutex_init(&m, NULL);
-pthread_cond_t window, texture;
-pthread_cond_init(&window,NULL);
-pthread_cond_init(&texture,NULL);
-int Taille, TailleFenetre;
-Taille = 0;
-pthread_cond_t fConsom, fDepot;
-pthread_cond_init(&fConsom,NULL);
-pthread_cond_init(&fDepot,NULL);
+pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t window = PTHREAD_COND_INITIALIZER;
+pthread_cond_t texture = PTHREAD_COND_INITIALIZER;
+int TailleFenetre;
+int Taille = 0;
+pthread_cond_t fConsom = PTHREAD_COND_INITIALIZER;
+pthread_cond_t fDepot = PTHREAD_COND_INITIALIZER;
 
 
 /* l'implantation des fonctions de synchro ici */
 void envoiTailleFenetre(th_ycbcr_buffer buffer) {
   pthread_mutex_lock(&m);
-  windowsx := buffer[0].width;
-  windowsy := buffer[0].length;
+  windowsx = buffer[0].width;
+  windowsy = buffer[0].height;
   pthread_cond_signal(&window);
   pthread_mutex_unlock(&m);
 }
@@ -56,8 +54,6 @@ void debutConsommerTexture() {
     pthread_cond_wait(&fConsom, &m);
   }
   vides --;
-  //consommation
-  //pthread_cond_broadcast(&plein);
   pthread_mutex_unlock(&m);
 }
 

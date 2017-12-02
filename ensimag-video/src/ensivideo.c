@@ -22,28 +22,23 @@ int main(int argc, char *argv[]) {
     atexit(SDL_Quit);
     assert(res == 0);
 
-
     // start the two stream readers
-    pthread_t ReadImg, ReadSon ;
-
-    pthread_create(&ReadImg,NULL,theoraStreamReader,argv[1]);
-    pthread_create(&ReadSon,NULL,vorbisStreamReader,argv[1]);
+    pthread_create(&threadVideo, NULL, theoraStreamReader, (void *) argv[1]);
+    pthread_create(&threadAudio, NULL, vorbisStreamReader, (void *) argv[1]);
 
     // wait audio thread
-    pthread_cond_t c;
-    pthread_cond_init(&c,NULL);
-    pthread_cond_wait(&c,&ReadSon);
+    pthread_join(threadAudio, NULL);
+
     // 1 seconde de garde pour le son,
     sleep(1);
 
     // tuer les deux threads videos si ils sont bloqués
-    pthread_cancel(&ReadSon);
-    pthread_cancel(&ReadImg);
+    pthread_cancel(threadVideo);
+    pthread_cancel(threadAffichage);
 
     // attendre les 2 threads videos
-    pthread_cond_wait(&c,&ReadSon);
-    pthread_cond_wait(&c,&ReadImg);
+    pthread_join(threadVideo, NULL);
+    pthread_join(threadAffichage, NULL);
 
     exit(EXIT_SUCCESS);
-
 }

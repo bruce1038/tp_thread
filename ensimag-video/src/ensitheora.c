@@ -26,6 +26,7 @@ void *draw2SDL(void *arg) {
     SDL_Texture* texture = NULL;
 
     pthread_mutex_t mutexHash;
+    pthread_mutex_init(&mutexHash, NULL);
 
     attendreTailleFenetre();
 

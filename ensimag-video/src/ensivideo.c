@@ -10,6 +10,8 @@
 int main(int argc, char *argv[]) {
     int res;
 
+    pthread_t threadAudio, threadVideo, threadAffichage;
+
     if (argc != 2) {
 	fprintf(stderr, "Usage: %s FILE", argv[0]);
 	exit(EXIT_FAILURE);

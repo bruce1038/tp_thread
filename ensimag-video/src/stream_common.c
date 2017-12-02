@@ -51,6 +51,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
     int bos = ogg_page_bos( ppage );
 
     pthread_mutex_t mutexHash;
+    pthread_mutex_init(&mutexHash, NULL);
 
     struct streamstate *s = NULL;
     if (bos) { // début de stream

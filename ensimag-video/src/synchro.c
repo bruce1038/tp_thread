@@ -22,17 +22,34 @@ pthread_cond_init(&fDepot,NULL);
 
 /* l'implantation des fonctions de synchro ici */
 void envoiTailleFenetre(th_ycbcr_buffer buffer) {
+  pthread_mutex_lock(&threadAffichage);
   windowsx := buffer[0].width;
   windowsy := buffer[0].length;
+  pthread_mutex_unlock(&threadAffichage);
 }
 
 void attendreTailleFenetre() {
+  pthread_mutex_lock(&threadAffichage);
+  while (windowsx == 0 && windowsy == 0)
+  {
+    pthread_cond_wait(&threadAffichage);
+  }
+  pthread_mutex_unlock(&threadAffichage);
 }
 
 void signalerFenetreEtTexturePrete() {
+  pthread_cond_signal(&threadAffichage);
+  pthread_cond_signal(&threadVideo);
+
 }
 
 void attendreFenetreTexture() {
+  pthread_mutex_lock(&threadAffichage);
+  while (windowsx == 0 && windowsy == 0)
+  {
+    pthread_cond_wait(&threadAffichage);
+  }
+  pthread_mutex_unlock(&threadAffichage);
 }
 
 void debutConsommerTexture() {

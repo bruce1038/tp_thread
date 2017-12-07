@@ -43,8 +43,8 @@ void signalerFenetreEtTexturePrete() {
 
 void attendreFenetreTexture() {
   pthread_mutex_lock(&m);
-  while (windowsx == 0 && windowsy == 0)
-    pthread_cond_wait(&texture, &m);
+  // while (windowsx == 0 && windowsy == 0)
+  pthread_cond_wait(&texture, &m);
   pthread_mutex_unlock(&m);
 }
 

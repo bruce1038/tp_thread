@@ -11,6 +11,8 @@
 
 pthread_t threadVideo, threadAudio, threadAffichage;
 
+bool boolTexture;
+
 enum streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
 
 struct theora_decode {

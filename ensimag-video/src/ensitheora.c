@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <SDL2/SDL.h>
-#include <pthread.h>
 #include "ensitheora.h"
 #include "synchro.h"
 #include "stream_common.h"
@@ -24,9 +23,6 @@ void *draw2SDL(void *arg) {
     int serial = (int) (long long int) arg;
     struct streamstate *s= NULL;
     SDL_Texture* texture = NULL;
-
-    pthread_mutex_t mutexHash;
-    pthread_mutex_init(&mutexHash, NULL);
 
     attendreTailleFenetre();
 
@@ -57,19 +53,17 @@ void *draw2SDL(void *arg) {
     assert(texture);
     // remplir les planes de TextureDate
     for(int i=0; i < NBTEX; i++) {
-	texturedate[i].plane[0] = malloc( windowsx * windowsy );
-	texturedate[i].plane[1] = malloc( windowsx * windowsy );
-	texturedate[i].plane[2] = malloc( windowsx * windowsy );
+    	texturedate[i].plane[0] = malloc( windowsx * windowsy );
+    	texturedate[i].plane[1] = malloc( windowsx * windowsy );
+    	texturedate[i].plane[2] = malloc( windowsx * windowsy );
     }
 
+    boolTexture = true;
     signalerFenetreEtTexturePrete();
 
     /* Protéger l'accès à la hashmap */
-    pthread_mutex_lock(&mutexHash);
 
-    HASH_FIND_INT(theorastrstate, &serial, s );
-
-    pthread_mutex_unlock(&mutexHash);
+    HASH_FIND_INT( theorastrstate, &serial, s );
 
 
 
